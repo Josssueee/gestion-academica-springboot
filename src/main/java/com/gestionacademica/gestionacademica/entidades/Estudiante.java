@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "estudiante")
@@ -19,11 +19,12 @@ public class Estudiante {
     private Long id;
 
     @Column(name = "nombre_estudiante", nullable = false)
-    private String nombre;
+    private String nombreEstudiante; // O tu nombre de atributo actual
 
-    @Column(name = "fecha_nacimiento", nullable = false)
-    private Date fechaNacimiento;
+    @Column(name = "fecha_nacimiento")
+    private LocalDate fechaNacimiento; // Asegúrate de que este sea el nombre de tu atributo
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
+
 }

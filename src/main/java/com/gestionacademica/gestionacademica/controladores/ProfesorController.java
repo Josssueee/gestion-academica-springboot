@@ -1,6 +1,6 @@
 package com.gestionacademica.gestionacademica.controladores;
 
-
+import com.gestionacademica.gestionacademica.dto.ProfesorDTO;
 import com.gestionacademica.gestionacademica.entidades.Profesor;
 import com.gestionacademica.gestionacademica.servicios.ProfesorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,29 +8,31 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/profesores")
+@RequestMapping("/profesores")
 public class ProfesorController {
 
     @Autowired
     private ProfesorService profesorService;
 
     @PostMapping
-    public Profesor crearProfesor(@RequestBody Profesor profesor) {
-        return profesorService.guardarProfesor(profesor);
+    public ResponseEntity<Profesor> crearProfesor(@RequestBody Profesor profesor) {
+        Profesor nuevoProfesor = profesorService.guardarProfesor(profesor);
+        return ResponseEntity.ok(nuevoProfesor);
     }
 
     @GetMapping
-    public List<Profesor> obtenerTodosLosProfesores() {
-        return profesorService.obtenerTodosLosProfesores();
+    public ResponseEntity<List<ProfesorDTO>> obtenerTodos(@RequestParam(required = false) String nombre) {
+        List<ProfesorDTO> profesores = profesorService.obtenerTodos(nombre);
+        return ResponseEntity.ok(profesores);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Profesor> obtenerProfesorPorId(@PathVariable Long id) {
-        Optional<Profesor> profesor = profesorService.obtenerProfesorPorId(id);
-        return profesor.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<ProfesorDTO> obtenerPorId(@PathVariable Long id) {
+        return profesorService.obtenerPorId(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")

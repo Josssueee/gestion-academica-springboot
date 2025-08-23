@@ -1,5 +1,6 @@
 package com.gestionacademica.gestionacademica.controladores;
 
+import com.gestionacademica.gestionacademica.dto.CursoDTO;
 import com.gestionacademica.gestionacademica.entidades.Curso;
 import com.gestionacademica.gestionacademica.servicios.CursoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,35 +8,33 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/cursos")
+@RequestMapping("/cursos")
 public class CursoController {
 
     @Autowired
     private CursoService cursoService;
 
-    // POST /api/cursos (Crear)
     @PostMapping
-    public Curso crearCurso(@RequestBody Curso curso) {
-        return cursoService.guardarCurso(curso);
+    public ResponseEntity<Curso> crearCurso(@RequestBody Curso curso) {
+        Curso nuevoCurso = cursoService.guardarCurso(curso);
+        return ResponseEntity.ok(nuevoCurso);
     }
 
-    // GET /api/cursos (Obtener Todos)
     @GetMapping
-    public List<Curso> obtenerTodosLosCursos() {
-        return cursoService.obtenerTodosLosCursos();
+    public ResponseEntity<List<CursoDTO>> obtenerTodos(@RequestParam(required = false) String nombre) {
+        List<CursoDTO> cursos = cursoService.obtenerTodos(nombre);
+        return ResponseEntity.ok(cursos);
     }
 
-    // GET /api/cursos/{id} (Obtener por ID)
     @GetMapping("/{id}")
-    public ResponseEntity<Curso> obtenerCursoPorId(@PathVariable Long id) {
-        Optional<Curso> curso = cursoService.obtenerCursoPorId(id);
-        return curso.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<CursoDTO> obtenerPorId(@PathVariable Long id) {
+        return cursoService.obtenerPorId(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    // PUT /api/cursos/{id} (Actualizar)
     @PutMapping("/{id}")
     public ResponseEntity<Curso> actualizarCurso(@PathVariable Long id, @RequestBody Curso curso) {
         Curso cursoActualizado = cursoService.actualizarCurso(id, curso);
@@ -45,7 +44,6 @@ public class CursoController {
         return ResponseEntity.notFound().build();
     }
 
-    // DELETE /api/cursos/{id} (Eliminar)
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarCurso(@PathVariable Long id) {
         cursoService.eliminarCurso(id);

@@ -1,8 +1,8 @@
-package com.gestionacademica.gestionacademica.entidades; 
+package com.gestionacademica.gestionacademica.entidades;
 
 import jakarta.persistence.*;
-import lombok.Data; 
-import lombok.NoArgsConstructor; 
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
 @Entity
@@ -18,7 +18,7 @@ public class Profesor {
     private Long id;
 
     @Column(name = "nombre_profesor", nullable = false)
-    private String nombre;
+    private String nombreProfesor;
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
